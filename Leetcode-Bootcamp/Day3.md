@@ -144,3 +144,13 @@ class MyLinkedList {
 Runtime: O(1) for addAtHead. O(k) for get, addAtIndex, and deleteAtIndex, where k is an index of the element to get, add or delete. O(N) for addAtTail.
 
 Space: O(1)
+
+## Leetcode 206
+### Problem
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+### Solution
+
+### Summary
+
+
