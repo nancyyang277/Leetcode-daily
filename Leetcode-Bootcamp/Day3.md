@@ -150,7 +150,33 @@ Space: O(1)
 Given the head of a singly linked list, reverse the list, and return the reversed list.
 
 ### Solution
+```
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode temp;
+            if (curr.next == null) {
+                temp = null;
+            } else {
+                temp = curr.next;
+            }
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}
+```
 
 ### Summary
+
+Pretty straightforward! Remember to set prev to null instead of ```new ListNode(0)```
+
+Runtime: O(n)
+
+Space: O(1)
 
 
