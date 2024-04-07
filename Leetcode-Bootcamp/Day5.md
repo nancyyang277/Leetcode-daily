@@ -1,4 +1,53 @@
 # Day5
+## Leetcode 242
+### Problem
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+ 
+
+Example 1:
+```
+Input: s = "anagram", t = "nagaram"
+Output: true
+```
+Example 2:
+```
+Input: s = "rat", t = "car"
+Output: false
+```
+
+### Solution
+```
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        int[] count1 = new int[26];
+        // int sum = 0;
+        if (s.length() != t.length()) {
+            return false;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            
+            count1[s.charAt(i) - 'a']++;
+        }
+        for (int j = 0; j < t.length(); j++) {
+            if (count1[t.charAt(j) - 'a'] == 0) {
+                return false;
+            }
+            count1[t.charAt(j) - 'a']--;
+        }
+        return true;
+    }
+}
+```
+### Summary
+Build a int[] to count for the occurances of each letter in s and subtract it using t's letters. If none of the letter occurances reach below 0, then we know they are anagrams of each other. Remember s and t might be different in length.
+
+Runtime: O(n)
+
+Space: O(n)
+
 ## Leetcode 349
 ### Problem
 Given two integer arrays nums1 and nums2, return an array of their 
