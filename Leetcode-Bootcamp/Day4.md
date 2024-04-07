@@ -125,3 +125,105 @@ Runtime: O(n)
 
 
 Space: O(1)
+
+## Leetcode 160 Intersection of Two LinkedList (Easy)
+### Problem
+Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+
+For example, the following two linked lists begin to intersect at node c1:
+![AC5A5F04-9079-4D92-B976-ADD8DE403263_4_5005_c](https://github.com/nancyyang277/Leetcode-daily/assets/165972977/9f788416-0075-4827-96bd-a60bb6a52043)
+
+### Solution
+```
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode pA = headA;
+        ListNode pB = headB;
+        while (pA != pB) {
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
+        return pA;
+    }
+}
+```
+### Summary
+![20C31371-82A9-4D5B-B8E6-0C68B7853572_4_5005_c](https://github.com/nancyyang277/Leetcode-daily/assets/165972977/d6807954-975a-412f-bb33-c04068d47235)
+
+In the above diagram, we would have one pointer points at the beginning of headA (pA), and another at headB (pB). let pA go through a + c first, and after goes through c, it will reach a null value, then we determine if pA == null, then we point it at headB. We do the same thing for pB, to let it go through b + c, and after goes through c, it will reach a null value, then we determine if pB == null, then we point it at headA. Since a + c + b (+c) = b + c + a (+ c), and if both loop through a + b + c, then both will reach the beginning of intersection if they intersect (at c). If they don't intersect, pA and pB will both equal to null at the end and return null. 
+
+Runtime: O(n + m)
+
+Space: O(1)
+
+## Leetcode 142 Linked List Cycle II (Medium)
+### Problem
+Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to (0-indexed). It is -1 if there is no cycle. Note that pos is not passed as a parameter.
+
+Do not modify the linked list.
+
+![9B7F352D-23FA-4B02-9E20-DFB84869585A_4_5005_c](https://github.com/nancyyang277/Leetcode-daily/assets/165972977/b2da10c4-58d6-480a-b98f-92da6d81db35)
+
+### Solution
+```
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                break;
+            }
+        }
+        if (fast == null || fast.next == null) {
+            return null;
+        }
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+```
+### Summary
+- 怎么判断会有intersection？
+  Consider two pointers at different speed - a slow pointer and a fast pointer. The slow pointer moves one step at a time while the fast    pointer moves two steps at a time.
+
+If there is no cycle in the list, the fast pointer will eventually reach the end and we can return false in this case.
+
+Now consider a cyclic list and imagine the slow and fast pointers are two runners racing around a circle track. The fast runner will eventually meet the slow runner. Why? Consider this case (we name it case A) - The fast runner is just one step behind the slow runner. In the next iteration, they both increment one and two steps respectively and meet each other.
+
+How about other cases? For example, we have not considered cases where the fast runner is two or three steps behind the slow runner yet. This is simple, because in the next or next's next iteration, this case will be reduced to case A mentioned above.
+
+- 为什么算法能work
+  
+![000458B3-42BA-429B-A786-DAC526ABE33D_4_5005_c](https://github.com/nancyyang277/Leetcode-daily/assets/165972977/40dffa0f-a173-475f-ab90-b847609f52f1)
+
+(x + y) * 2 = x + y + n (y + z)
+
+两边消掉一个（x+y）: x + y = n (y + z)
+
+因为要找环形的入口，那么要求的是x，因为x表示 头结点到 环形入口节点的的距离。
+
+所以要求x ，将x单独放在左面：x = n (y + z) - y ,
+
+再从n(y+z)中提出一个 （y+z）来，整理公式之后为如下公式：x = (n - 1) (y + z) + z 注意这里n一定是大于等于1的，因为 fast指针至少要多走一圈才能相遇slow指针。
+
+这个公式说明什么呢？
+
+先拿n为1的情况来举例，意味着fast指针在环形里转了一圈之后，就遇到了 slow指针了。
+
+当 n为1的时候，公式就化解为 x = z，
+
+这就意味着，从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点。
+
+This tells us that the number of times the fast laps the cycle times the length of the cycle equals the distance from the head of the list to the meeting point.
+
+https://leetcode.com/problems/linked-list-cycle-ii/editorial/
+
