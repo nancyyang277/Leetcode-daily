@@ -1,4 +1,8 @@
 # Day11
+### Leetcode 20
+
+### Leetcode 150
+
 ### Leetcode 1047
 ### Problem
 You are given a string s consisting of lowercase English letters. A duplicate removal consists of choosing two adjacent and equal letters and removing them.
