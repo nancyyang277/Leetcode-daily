@@ -79,46 +79,38 @@ Output: [0]
 ### Solution
 ```
 class Solution {
-    int maxStreak = 0;
-    int currStreak = 0;
-    int currNum = 0;
-    List<Integer> ans = new ArrayList();
-    
+    TreeNode prevNode;
+    int maxCount = 1;
+    int count = 1;
+    List<Integer> list = new ArrayList<>();
     public int[] findMode(TreeNode root) {
-        dfs(root);
-        
-        int[] result = new int[ans.size()];
-        for (int i = 0; i < ans.size(); i++) {
-            result[i] = ans.get(i);
-        }
-        
-        return result;
+        helper(root);
+        return list.stream().mapToInt(i -> i).toArray();
     }
-    
-    public void dfs(TreeNode node) {
-        if (node == null) {
+
+    private void helper(TreeNode root) {
+        if (root == null) {
             return;
         }
-        
-        dfs(node.left);
-        int num = node.val;
-        if (num == currNum) {
-            currStreak++;
+        helper(root.left);
+        if (prevNode != null) {
+            if (root.val == prevNode.val) {
+                count++;
+            } else {
+                prevNode = root;
+                count = 1;
+            }
         } else {
-            currStreak = 1;
-            currNum = num;
+            prevNode = root;
         }
-
-        if (currStreak > maxStreak) {
-            ans = new ArrayList();
-            maxStreak = currStreak;
+        if (count > maxCount) {
+            list.clear();
+            list.add(root.val);
+            maxCount = count;
+        } else if (count == maxCount) {
+            list.add(root.val);
         }
-
-        if (currStreak == maxStreak) {
-            ans.add(num);
-        }
-        
-        dfs(node.right);
+        helper(root.right);
     }
 }
 ```
