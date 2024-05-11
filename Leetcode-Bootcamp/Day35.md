@@ -69,9 +69,33 @@ Output: [10]
 ```
 
 ### Solution
-
+```
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        int[] last = new int[26];
+        for (int i = 0; i < s.length(); ++i)
+            last[s.charAt(i) - 'a'] = i;
+        int size = 0;
+        int end = 0;
+        List<Integer> ans = new ArrayList();
+        for (int i = 0; i < s.length(); i++) {
+            if (last[s.charAt(i) - 'a'] > end) {
+                end = last[s.charAt(i) - 'a'];
+            } 
+            size++;
+            if (i == end) {
+                ans.add(size);
+                size = 0;
+            }
+        }
+        return ans;
+    }
+}
+```
 ### Summary
-
+We need an array last[char] -> index of S where char occurs last.
+Then, let j be the end of the current partition. And size be the partition size (update each time).
+If we are at a label that occurs last at some index after j, we'll extend the partition j = last[c]. If we are at the end of the partition (i == j) which means all the letters in the current partition have a end index lower than or equal to j. then we'll append a partition size to our answer, and set our size back to 0.
 
 ## Leetcode 456 Merge Intervals
 ### Problem
@@ -93,9 +117,28 @@ Explanation: Intervals [1,4] and [4,5] are considered overlapping.
 ```
 
 ### Solution
-
+```
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+        List<int[]> result = new ArrayList<>();
+        int[] temp = intervals[0];
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] <= temp[1]) {
+                int max = Math.max(intervals[i][1], temp[1]);
+                temp[1] = max;
+            } else {
+                result.add(temp);
+                temp = intervals[i];
+            }
+        }
+        result.add(temp);
+        return result.toArray(new int[0][]);
+    } 
+}
+```
 ### Summary
-
+First, we sort the list as by the start ascendingly. Then, we insert the first interval into our merged list and continue considering each interval in turn as follows: If the current interval begins after the previous interval ends, then they do not overlap and we can append the current interval to merged. Otherwise, they do overlap, and we merge them by updating the end of the previous interval if it is less than the end of the current interval.
 
 
 
