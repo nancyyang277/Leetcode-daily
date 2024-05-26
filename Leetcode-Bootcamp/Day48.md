@@ -97,3 +97,75 @@ class Solution {
     }
 }
 ```
+
+## Leetcode 337 House Robber III
+### Problem
+The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.
+
+Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if two directly-linked houses were broken into on the same night.
+
+Given the root of the binary tree, return the maximum amount of money the thief can rob without alerting the police.
+
+ 
+
+Example 1:
+<img width="366" alt="Screenshot 2024-05-26 at 1 34 17 PM" src="https://github.com/nancyyang277/Leetcode-daily/assets/165972977/96c036e3-ba51-4709-a3af-a7f155e19019">
+
+```
+Input: root = [3,2,3,null,3,null,1]
+Output: 7
+Explanation: Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
+```
+Example 2:
+<img width="379" alt="Screenshot 2024-05-26 at 1 34 23 PM" src="https://github.com/nancyyang277/Leetcode-daily/assets/165972977/3502f7e5-28a0-487e-961e-2241c0f64ea3">
+
+```
+Input: root = [3,4,5,1,3,null,1]
+Output: 9
+Explanation: Maximum amount of money the thief can rob = 4 + 5 = 9.
+```
+
+### Solution
+```
+class Solution {
+    public int rob(TreeNode root) {
+        Node result = helper(root);
+        return Math.max(result.include, result.exclude);
+    }
+
+    public Node helper(TreeNode root) {
+        if (root.left == null && root.right == null) {
+            return new Node(root.val, 0);
+        }
+        Node left = new Node(0, 0);
+        Node right = new Node(0, 0);
+        if (root.left != null) {
+            left = helper(root.left);
+        }
+        if (root.right != null) {
+            right = helper(root.right);
+        }
+        int compare = Math.max(left.include + right.exclude, left.exclude + right.include);
+        Node temp = new Node(root.val + left.exclude + right.exclude, Math.max(left.include + right.include, Math.max(left.exclude + right.exclude, compare)));
+        return temp;
+    }
+}
+
+class Node {
+    int include = 0;
+    int exclude = 0;
+    public Node(int include, int exclude) {
+        this.include = include;
+        this.exclude = exclude;
+    }
+}
+```
+
+### Summary
+- Create a new class contains two fields include and exclude, include is the maximum value if we include the current node, exclude is the maximum value if we don't include this value
+- for exclude, we have 4 combinations and we take the maximum among 4 combos
+  - Include left + include right
+  - Exclude left + exclude left
+  - Include left + exclude right
+  - Exclude left + include right
+ - return Math.max(include, exclude) for root node
